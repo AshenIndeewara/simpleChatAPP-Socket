@@ -4,13 +4,18 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -26,6 +31,19 @@ public class Client extends Application {
     @FXML
     private TextArea incommingMSG;
 
+    @FXML
+    void imageUpload(ActionEvent event) {
+        Window window = ((Node) (event.getSource())).getScene().getWindow();
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(window);
+        event.consume();
+        if (file != null) {
+            String filePath = file.getAbsolutePath();
+            incommingMSG.appendText("File selected: " + filePath + "\n");
+        } else {
+            incommingMSG.appendText("File selection cancelled.\n");
+        }
+    }
     @FXML
     void sendMSG(ActionEvent event) throws IOException {
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
