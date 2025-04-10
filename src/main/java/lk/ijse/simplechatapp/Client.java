@@ -9,15 +9,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
 
 public class Client extends Application {
     DataInputStream dataInputStream;
@@ -25,6 +25,8 @@ public class Client extends Application {
     String messagee="";
     Socket socket;
 
+    @FXML
+    private ImageView imageView;
     @FXML
     private TextField message;
 
@@ -38,8 +40,17 @@ public class Client extends Application {
         File file = fileChooser.showOpenDialog(window);
         event.consume();
         if (file != null) {
-            String filePath = file.getAbsolutePath();
-            incommingMSG.appendText("File selected: " + filePath + "\n");
+            try {
+                dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                byte[] fileBytes = Files.readAllBytes(file.toPath());
+                dataOutputStream.writeUTF("IMG");
+                dataOutputStream.writeLong(fileBytes.length);
+                dataOutputStream.write(fileBytes);
+                dataOutputStream.flush();
+                incommingMSG.appendText("Image sent successfully.\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             incommingMSG.appendText("File selection cancelled.\n");
         }
@@ -60,8 +71,17 @@ public class Client extends Application {
                 socket = new Socket("localhost",4000);
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 while (!message.equals("exit")) {
-                    messagee=dataInputStream.readUTF();
-                    incommingMSG.appendText("Server: " + messagee+"\n");
+                    messagee = dataInputStream.readUTF();
+                    if(messagee.equals("IMG")) {
+                        incommingMSG.appendText("Image received\n");
+                        long fileSize = dataInputStream.readLong();
+                        byte[] imageBytes = new byte[(int) fileSize];
+                        dataInputStream.readFully(imageBytes);
+                        Image image = new Image(new ByteArrayInputStream(imageBytes));
+                        imageView.setImage(image);
+                    }else{
+                        incommingMSG.appendText("Client: " +messagee + "\n");
+                    }
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

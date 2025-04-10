@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -11,7 +12,7 @@
 
     <children>
         <Button layoutX="494.0" layoutY="384.0" mnemonicParsing="false" onAction="#sendMSG" prefHeight="31.0" prefWidth="66.0" text="send" />
-        <TextArea fx:id="incommingMSG" layoutX="77.0" layoutY="81.0" prefHeight="268.0" prefWidth="447.0" />
+        <TextArea fx:id="incommingMSG" layoutX="77.0" layoutY="81.0" prefHeight="268.0" prefWidth="296.0" />
         <Label layoutX="264.0" layoutY="23.0" prefHeight="30.0" prefWidth="73.0" text="CLIENT" textAlignment="CENTER" AnchorPane.leftAnchor="264.0" AnchorPane.rightAnchor="263.0">
             <font>
                 <Font name="System Bold" size="20.0" />
@@ -19,5 +20,6 @@
         </Label>
       <TextField fx:id="message" layoutX="77.0" layoutY="372.0" prefHeight="56.0" prefWidth="407.0" promptText="message...." />
       <Button layoutX="5.0" layoutY="372.0" mnemonicParsing="false" onAction="#imageUpload" prefHeight="56.0" prefWidth="66.0" text="IMG" />
+      <ImageView fx:id="imageView" fitHeight="268.0" fitWidth="200.0" layoutX="384.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true" />
     </children>
 </AnchorPane>
